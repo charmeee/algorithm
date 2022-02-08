@@ -7,6 +7,9 @@
 #include <vector>
 //#include <map>//https://life-with-coding.tistory.com/305
 
+//처음 chk라는 배열에 수를넣고 비교하며 숫자가 있는지 비교했으나. 그것보다 그냥 1-9를 넣어서 비교하고 넘기는게 더빠르다.중간에 넘길 수 있어서..
+//이게 여러가지 되는거일때도 된다는식으로 해야해서 하나넣어보고 다음꺼 다음꺼 다음꺼 이런식으로 해서 안되면 패스 요런식으로해야함,..
+
 using namespace std;
 
 struct Data{
@@ -15,45 +18,49 @@ struct Data{
 
 int arr[9][9]={};
 vector<Data> v;
+bool found=false;
 
-int count(int chk[]){
-    int tmp=0;
-    int cnt=0;
+bool check(int x,int y,int t){
+  int cx,cy;
+  for(int i=0;i<9;i++){//가로세로 검사.
+    if(arr[x][i]==t){//가로
+      return false;
+    }
+    if(arr[i][y]==t){//세로
+      return false;
+    }
+  }
+  cx=x/3;cy=y/3;
+  for(int i=0;i<3;i++){for(int j=0;j<3;j++){
+    if(arr[3*cx+i][3*cy+j]==t){return false;}     
+    }
+  }
+  return true;
+}
+
+int sudoku(int n) {
+  if(n==v.size()){
     for(int i=0;i<9;i++){
-        if(chk[i]==0){cnt++;tmp=i+1;}
+      for(int j=0;j<9;j++){
+          printf("%d ",arr[i][j]);
+      }
+    printf("\n");
     }
-    if(cnt==1){return tmp;}else{return 0;}
-}
-
-int check(int x,int y){
-    int a,b,cx,cy;
-    int tmp=0;
-    int chk[9]={0,};
-    for(int i=0;i<9;i++){//가로세로 검사.
-        if(arr[x][i]!=0){//가로
-            a=arr[x][i]-1;
-            chk[a]=1;
-        }
-        if(arr[i][y]!=0){//세로
-            b=arr[i][y]-1;
-            chk[b]=1;
-            
-        }
+    found=true;
+    return 0;
+  }
+  for(int j=1;j<10;j++){
+    if(check(v[n].x,v[n].y,j)){
+      arr[v[n].x][v[n].y]=j;
+      sudoku(n+1);
     }
-    tmp=count(chk);
-    if(tmp!=0){return tmp;}
-    cx=x/3;cy=y/3;
-    for(int i=0;i<3;i++){for(int j=0;j<3;j++){
-        int k=arr[3*cx+i][3*cy+j]-1;
-        if(k>-1){
-            chk[k]=1;
-        }  
-    }}
-    tmp=count(chk);
-    if(tmp!=0){return tmp;}else{return 0;}
-    
+    if(found){
+      return 0;
+    }
+    arr[v[n].x][v[n].y]=0;//찾았으면 앞에서 종료되었을 거임.
+  }
+  return 0;
 }
-
 
 int main(){
   int result;
@@ -65,24 +72,5 @@ int main(){
       }
     }
   }
-
-  while(v.size()){
-    for(int i=0;i<v.size();i++){
-        result=check(v[i].x,v[i].y);
-        if(result!=0){
-            arr[v[i].x][v[i].y]=result;
-            v.erase(v.begin()+i);
-            i--;
-            
-        }
-        
-    }
-
-  }
-  for(int i=0;i<9;i++){
-    for(int j=0;j<9;j++){
-        printf("%d ",arr[i][j]);
-    }
-    printf("\n");
-  }
+  sudoku(0);
 }
