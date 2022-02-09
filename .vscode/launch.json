@@ -9,6 +9,9 @@
             "name": "g++.exe - 활성 파일 빌드 및 디버그",
             "type": "cppdbg",
             "request": "launch",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
             "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
             "args": [],
             "stopAtEntry": false,
