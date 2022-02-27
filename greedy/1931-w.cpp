@@ -2,45 +2,40 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
+struct Data
+{
+    int start;
+    int end;
+};
+
+bool cmp(const Data &a,const Data &b){
+    if(a.end==b.end){
+        return a.start<b.start;
+    }
+    return a.end<b.end;
+}
+
 int main(){
     int t;cin>>t;
-    vector <vector <int> > v(t, vector <int>(2,0));
+    vector <Data> d;
     int cnt=0;
-    int max=0;
     for(int i=0;i<t;i++){
-        int start;int end;
-        cin>>start;cin>>end;
-        if(start==end){cnt++;}
-        else{v[i][0]=start;v[i][1]=end;}
-        if(max<end){max=end;}
+        int s;int e;
+        cin>>s>>e;
+        d.push_back({s,e});
     }
-    vector <int> time(max+2);
-    int max1=0;
-    for(int i=0;i<t;i++){
-        if(v[i][1]!=0){
-            for(int j=v[i][0];j<v[i][1];j++){
-                time[j]++;
-                if(max1<time[j]){max1=time[j];}
-            }        
+    sort(d.begin(),d.end(),cmp);
+    int last=0;
+
+    for(int i=0;i<d.size();i++){
+        if(last<=d[i].start){
+            cnt++;
+            last=d[i].end;
         }
     }
-    cout<<max1<<endl;
-    for(int j=1;j<=max1;j++){
-        bool check =false;
-        int start;int end;
-        for(int i=0;i<max+1;i++){
-            if(time[i]==j){
-                if(!check){start=i;}
-                bool check=true;
-                if(time[i+1]!=j){
-                    end=i;
-                    
-                }
-            }
-        }
-    }
-    
+    cout<<cnt;
 }
