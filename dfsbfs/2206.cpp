@@ -9,7 +9,7 @@ int arr[1001][1001]={};
 int visited[1001][1001][2]={};
 int t=1;
 int n,m;//y,x
-int cnt=0;
+
 
 struct point{
     int px,py,pblock;
@@ -20,50 +20,40 @@ void bfs(){
     int dx[]={-1,0,1,0};
     int dy[]={0,-1,0,1};
     while(!q.empty()){
-        int tmp =0;
-        for(int i=0;i<t;i++){
-            int x=q.front().px;
-            int y=q.front().py;
-            int block=q.front().pblock;
-            int before=visited[y][x][block];
-            q.pop();
-            //cout<<cnt<<"::  "<<y<<"/"<<x<<"  block:"<<block<<"  숫자:"<<visited[y][x][block]<<endl;
-            if(block==0){
-                for(int j=0;j<4;j++){
-                    int nx=x+dx[j];
-                    int ny=y+dy[j];
-                    if(nx<0||m<=nx||ny<0||n<=ny){
-                        continue;
-                    }
-                    if(arr[ny][nx]==0&&visited[ny][nx][0]==0){
-                        visited[ny][nx][0]=before+1;//벽 부시기전 
-                        q.push({nx,ny,0});
-                        tmp++;
-                    }
-                    if(arr[ny][nx]==1&&visited[ny][nx][0]==0){
-                        visited[ny][nx][1]=before+1;//벽 부시기 후 
-                        q.push({nx,ny,1});
-                        tmp++;
-                    }
+        int x=q.front().px;
+        int y=q.front().py;
+        int block=q.front().pblock;
+        int before=visited[y][x][block];
+        q.pop();
+        //cout<<cnt<<"::  "<<y<<"/"<<x<<"  block:"<<block<<"  숫자:"<<visited[y][x][block]<<endl;
+        if(block==0){
+            for(int j=0;j<4;j++){
+                int nx=x+dx[j];
+                int ny=y+dy[j];
+                if(nx<0||m<=nx||ny<0||n<=ny){
+                    continue;
                 }
-            }else{//block==1인경우 즉 벽부시고 난후
-                for(int j=0;j<4;j++){
-                    int nx=x+dx[j];
-                    int ny=y+dy[j];
-                    if(nx<0||m<=nx||ny<0||n<=ny){
-                        continue;
-                    }
-                    if(arr[ny][nx]==0&&visited[ny][nx][1]==0){
-                        visited[ny][nx][1]=before+1;
-                        q.push({nx,ny,1});
-                        tmp++;
-                    }
+                if(arr[ny][nx]==0&&visited[ny][nx][0]==0){
+                    visited[ny][nx][0]=before+1;//벽 부시기전 
+                    q.push({nx,ny,0});
+                }
+                if(arr[ny][nx]==1&&visited[ny][nx][0]==0){
+                    visited[ny][nx][1]=before+1;//벽 부시기 후 
+                    q.push({nx,ny,1});
                 }
             }
-        }
-        t=tmp;
-        if(tmp!=0){
-            cnt++;
+        }else{//block==1인경우 즉 벽부시고 난후
+            for(int j=0;j<4;j++){
+                int nx=x+dx[j];
+                int ny=y+dy[j];
+                if(nx<0||m<=nx||ny<0||n<=ny){
+                    continue;
+                }
+                if(arr[ny][nx]==0&&visited[ny][nx][1]==0){
+                    visited[ny][nx][1]=before+1;
+                    q.push({nx,ny,1});
+                }
+            }
         }
     }
 }
